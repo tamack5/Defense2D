@@ -3,7 +3,7 @@ using System.Collections;
 
 public class BulletScript : MonoBehaviour {
 
-    public string sourceName;
+    public GameObject source = null;
     public float damage;
 
 	// Use this for initialization
@@ -19,14 +19,14 @@ public class BulletScript : MonoBehaviour {
     void OnCollisionEnter2D (Collision2D other)
     {
         // Don't collide with other bullets
-        if (other.gameObject.name != gameObject.name)
+        if (other.gameObject.tag != gameObject.tag)
         {
             // Don't collide with the source of this bullet, if there is one
-            if (sourceName == null || sourceName != other.gameObject.name)
+            if (source.gameObject != other.gameObject)
             {
                 if (other.gameObject.GetComponent<HealthScript>() != null)
                 {
-                    other.gameObject.GetComponent<HealthScript>().TakeDamage(damage);
+                    other.gameObject.GetComponent<HealthScript>().TakeDamage(damage, source);
                 }
 
 

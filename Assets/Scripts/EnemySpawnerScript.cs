@@ -4,28 +4,36 @@ using System.Collections;
 public class EnemySpawnerScript : MonoBehaviour {
 
     public GameObject spawn;
-    public int totalEnemies;
-    public float spawnRadius;
-    public float spawnTimer;
+    public int maxNumSpawn = 5;
+    int currentNumSpawn = 0;
+    public float spawnRadius = 2f;
+    public float spawnTimer = 3f;
 
-    float lastSpawnTime;
+    float lastSpawnTime = 0;
 
 	// Use this for initialization
 	void Start () {
-        lastSpawnTime = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
         lastSpawnTime += Time.deltaTime;
 
-        if (lastSpawnTime >= spawnTimer)
+        if (currentNumSpawn < maxNumSpawn && lastSpawnTime >= spawnTimer)
         {
             // Spawn randomly, radially from center
             Vector3 spawnPoint = transform.position + Quaternion.AngleAxis(Random.Range(0f, 365f), Vector3.forward) * (new Vector3(Random.Range(0f, spawnRadius), 0));
             GameObject newSpawn = (GameObject)Instantiate(spawn, spawnPoint, Quaternion.AngleAxis(Random.Range(0f, 365f), Vector3.forward));
+            newSpawn.GetComponent<EnemyScript>().SetSpawnedFrom(gameObject);
+            currentNumSpawn++;
 
             lastSpawnTime = 0;
         }
 	}
+
+    public void SpawnDied()
+    {
+        currentNumSpawn--;
+        lastSpawnTime = 0;
+    }
 }

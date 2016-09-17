@@ -5,6 +5,7 @@ public class EnemyScript : MonoBehaviour {
 
     public float movementSpeed = 5f;
     public float damage = 100f;
+    public GameObject spawnedFrom;
     float playerDetectRadius = 5;
     GameObject[] targets;
 
@@ -72,5 +73,20 @@ public class EnemyScript : MonoBehaviour {
         }
 
         return false;
+    }
+
+    public void Die()
+    {
+        if (spawnedFrom != null)
+        {
+            spawnedFrom.GetComponent<EnemySpawnerScript>().SpawnDied();
+        }
+
+        Destroy(gameObject);
+    }
+
+    public void SetSpawnedFrom(GameObject spawner)
+    {
+        spawnedFrom = spawner;
     }
 }

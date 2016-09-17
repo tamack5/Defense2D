@@ -1,25 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour {
 
-    float timeLastShot;
-    float timeBetweenShot;
+
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
+    public float score = 0;
+
+    [SerializeField]
+    Text scoreField;
 
     //Time/cron
     float timeSince_TakeDamage = 0;
     float timeBetween_TakeDamage = 1f;
+    float timeSince_Fire = 0;
+    float timeBetween_Fire = 0.1f;
 
-	// Use this for initialization
-	void Start () {
-        timeLastShot = -1;
-        timeBetweenShot = 0.1f;
+    // Use this for initialization
+    void Start () {
     }
 	
 	// Update is called once per frame
 	void Update () {
+
+        #region Movement, Rotation & Camera Tracking
 
         // Player Movement
         float upDown = Input.GetAxis("Vertical") * Time.deltaTime * 5f;
@@ -38,20 +44,19 @@ public class PlayerScript : MonoBehaviour {
         if (groundPlane.Raycast(ray, out mouseHeight))
         {
             Vector3 mouse = ray.GetPoint(mouseHeight) - transform.position;
-            Debug.Log("Ray: Cast! =" + Input.mousePosition + " me: " + transform.position);
+            //Debug.Log("Ray: Cast! =" + Input.mousePosition + " me: " + transform.position);
             float theta = Mathf.Atan2(mouse.y, mouse.x) * Mathf.Rad2Deg - 90f;
             transform.rotation = Quaternion.AngleAxis(theta, Vector3.forward);
         }
-
-
-        //Quaternion attempt = Quaternion.AngleAxis(Mathf.Atan(Vector3.Angle(Input.mousePosition, Vector3.up)), Vector3.forward);
-        //Debug.Log(Vector3.Angle(Input.mousePosition, Vector3.up));
-        //transform.rotation = Quaternion.AngleAxis(Mathf.Atan(Vector3.Angle(Input.mousePosition, Vector3.up)), Vector3.forward);
-
+        
+        // Camera Tracking
         Camera.main.gameObject.transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.gameObject.transform.position.z);
+        
+        #endregion
+
 
         // Cooldowns
-        timeLastShot += Time.deltaTime;
+        timeSince_Fire += Time.deltaTime;
         timeSince_TakeDamage += Time.deltaTime;
 
         // Leftclick?
@@ -66,20 +71,19 @@ public class PlayerScript : MonoBehaviour {
     void FireWeapon()
     {
         // When holding down the mouse, determine how fast we should shoot
-        if (timeLastShot >= timeBetweenShot || timeLastShot < 0)
+        if (timeSince_Fire >= timeBetween_Fire || timeSince_Fire < 0)
         {
             var bullet = (GameObject)Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
-            bullet.GetComponent<BulletScript>().sourceName = gameObject.name;
+            bullet.GetComponent<BulletScript>().source = gameObject;
 
             bullet.GetComponent<Rigidbody2D>().velocity = bulletSpawn.up * 8f;
 
-            timeLastShot = 0;
+            timeSince_Fire = 0;
         }
     }
 
     void OnTriggerEnter2D (Collider2D other)
     {
-        Debug.Log("Collided!");
         if (other.gameObject.name.Contains("Wall"))
         {
             //...stop?
@@ -88,7 +92,6 @@ public class PlayerScript : MonoBehaviour {
         {
             if (IsTimeToTakeDamage())
             {
-                Debug.Log("It's damage time");
                 gameObject.GetComponent<HealthScript>().TakeDamage(other.gameObject.GetComponent<EnemyScript>().damage);
             }
         }
@@ -104,5 +107,16 @@ public class PlayerScript : MonoBehaviour {
         }
 
         return false;
+    }
+
+    public void AddScore(float points)
+    {
+        score += points;
+        UpdateScore();
+    }
+
+    void UpdateScore()
+    {
+        scoreField.text = score.ToString();
     }
 }

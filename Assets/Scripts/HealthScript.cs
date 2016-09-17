@@ -21,24 +21,39 @@ public class HealthScript : MonoBehaviour {
 
     public void TakeDamage(float dmg)
     {
+        TakeDamage(dmg, null);
+    }
+
+    public void TakeDamage(float dmg, GameObject dmgSource)
+    {
         currentHealth -= dmg;
 
         StartCoroutine(Flicker());
 
-        
 
         if (currentHealth <= 0)
         {
-            Die();
+            if (gameObject.tag == "Player")
+            {
+                // Player death
+                Destroy(gameObject);
+            }
+            else if (gameObject.tag == "Enemy")
+            {
+                if (dmgSource != null && dmgSource.GetComponent<PlayerScript>() != null)
+                {
+                    dmgSource.GetComponent<PlayerScript>().AddScore(50);
+                }
+                gameObject.GetComponent<EnemyScript>().Die();
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
-
-    void Die()
-    {
-        Destroy(gameObject);
-    }
-
+    // Flicker the color of the damaged object
     IEnumerator Flicker()
     {
         if (!isFlickering)
