@@ -21,18 +21,24 @@ public class PlayerScript : MonoBehaviour {
     // Use this for initialization
     void Start () {
     }
+
+    void FixedUpdate()
+    {
+        // Player Movement
+        float upDown = Input.GetAxis("Vertical") * Time.deltaTime * 200f;
+        float leftRight = Input.GetAxis("Horizontal") * Time.deltaTime * 200f;
+
+        gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(leftRight, upDown);
+        
+        //transform.Translate(new Vector3(0, upDown, 0), Space.World);
+        //transform.Translate(new Vector3(leftRight, 0, 0), Space.World);
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
 
-        #region Movement, Rotation & Camera Tracking
-
-        // Player Movement
-        float upDown = Input.GetAxis("Vertical") * Time.deltaTime * 5f;
-        float leftRight = Input.GetAxis("Horizontal") * Time.deltaTime * 5f;
-        transform.Translate(new Vector3(0, upDown, 0), Space.World);
-        transform.Translate(new Vector3(leftRight, 0, 0), Space.World);
-
+        #region Rotation & Camera Tracking
         // Poor man's mouse turning
         //float mouseX = Input.GetAxis("Mouse X") * Time.deltaTime * 300f;
         //transform.Rotate(new Vector3(0, 0, mouseX));
@@ -46,9 +52,10 @@ public class PlayerScript : MonoBehaviour {
             Vector3 mouse = ray.GetPoint(mouseHeight) - transform.position;
             //Debug.Log("Ray: Cast! =" + Input.mousePosition + " me: " + transform.position);
             float theta = Mathf.Atan2(mouse.y, mouse.x) * Mathf.Rad2Deg - 90f;
-            transform.rotation = Quaternion.AngleAxis(theta, Vector3.forward);
+            gameObject.GetComponent<Rigidbody2D>().MoveRotation(theta);
+            //transform.rotation = Quaternion.AngleAxis(theta, Vector3.forward);
         }
-        
+
         // Camera Tracking
         Camera.main.gameObject.transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.gameObject.transform.position.z);
         
@@ -59,7 +66,7 @@ public class PlayerScript : MonoBehaviour {
         timeSince_Fire += Time.deltaTime;
         timeSince_TakeDamage += Time.deltaTime;
 
-        // Leftclick?
+        // Leftclick
         if (Input.GetKey(KeyCode.Mouse0))
         {
             FireWeapon();
@@ -79,21 +86,6 @@ public class PlayerScript : MonoBehaviour {
             bullet.GetComponent<Rigidbody2D>().velocity = bulletSpawn.up * 8f;
 
             timeSince_Fire = 0;
-        }
-    }
-
-    void OnTriggerEnter2D (Collider2D other)
-    {
-        if (other.gameObject.name.Contains("Wall"))
-        {
-            //...stop?
-        }
-        else if (other.gameObject.tag == "Enemy")
-        {
-            if (IsTimeToTakeDamage())
-            {
-                gameObject.GetComponent<HealthScript>().TakeDamage(other.gameObject.GetComponent<EnemyScript>().damage);
-            }
         }
     }
 

@@ -8,6 +8,7 @@ public class EnemySpawnerScript : MonoBehaviour {
     int currentNumSpawn = 0;
     public float spawnRadius = 2f;
     public float spawnTimer = 3f;
+    public bool isOneTimeSpawn = false;
 
     float lastSpawnTime = 0;
 
@@ -28,6 +29,10 @@ public class EnemySpawnerScript : MonoBehaviour {
             currentNumSpawn++;
 
             lastSpawnTime = 0;
+        }
+        else if (isOneTimeSpawn && currentNumSpawn >= maxNumSpawn)
+        {
+            Destroy(gameObject);
         }
 	}
 
