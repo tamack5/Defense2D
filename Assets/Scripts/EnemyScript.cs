@@ -101,11 +101,9 @@ public class EnemyScript : MonoBehaviour
     {
         if (other.gameObject.layer == (int)Constants.LAYERS.PLAYER)
         {
-            Debug.Log("Hit!");
             // Hit a player
             if (IsTimeToAttack())
             {
-                Debug.Log("Attacking..");
                 Attack();
             }
             
@@ -140,7 +138,6 @@ public class EnemyScript : MonoBehaviour
     {
         if (target.GetComponent<HealthScript>() != null)
         {
-            Debug.Log("Trying to do damage to " + target.name);
             target.GetComponent<HealthScript>().TakeDamage(baseDamage);
         }
     }

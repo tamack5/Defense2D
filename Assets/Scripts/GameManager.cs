@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
-
+    [SerializeField]
+    Text scoreField;
 
 	// Use this for initialization
 	void Start () {
@@ -20,4 +21,13 @@ public class GameManager : MonoBehaviour {
     {
         // Eh?
     }
+
+    public void UpdateScore(float score)
+    {
+        if (scoreField != null)
+        {
+            scoreField.text = "Score: " + score;
+        }
+    }
+    
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
+
 
 public class PlayerScript : MonoBehaviour {
 
@@ -10,7 +10,8 @@ public class PlayerScript : MonoBehaviour {
     public float score = 0;
 
     [SerializeField]
-    Text scoreField;
+    GameObject GameManager;
+    
 
     //Time/cron
     float timeSince_TakeDamage = 0;
@@ -19,7 +20,13 @@ public class PlayerScript : MonoBehaviour {
     float timeBetween_Fire = 0.1f;
 
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
+        GameManager = GameObject.FindGameObjectWithTag("GameManager");
+        if (GameManager == null)
+        {
+            Debug.Log("No game manager!");
+        }
     }
 
     void FixedUpdate()
@@ -84,6 +91,7 @@ public class PlayerScript : MonoBehaviour {
             bullet.GetComponent<BulletScript>().source = gameObject;
 
             bullet.GetComponent<Rigidbody2D>().velocity = bulletSpawn.up * 8f;
+            Destroy(bullet, 5f);
 
             timeSince_Fire = 0;
         }
@@ -109,6 +117,6 @@ public class PlayerScript : MonoBehaviour {
 
     void UpdateScore()
     {
-        scoreField.text = score.ToString();
+        GameManager.GetComponent<GameManager>().UpdateScore(score);
     }
 }

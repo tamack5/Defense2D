@@ -26,6 +26,7 @@ public class EnemySpawnerScript : MonoBehaviour {
             Vector3 spawnPoint = transform.position + Quaternion.AngleAxis(Random.Range(0f, 365f), Vector3.forward) * (new Vector3(Random.Range(0f, spawnRadius), 0));
             GameObject newSpawn = (GameObject)Instantiate(spawn, spawnPoint, Quaternion.AngleAxis(Random.Range(0f, 365f), Vector3.forward));
             newSpawn.GetComponent<EnemyScript>().SetSpawnedFrom(gameObject);
+
             currentNumSpawn++;
 
             lastSpawnTime = 0;
