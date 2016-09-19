@@ -6,11 +6,20 @@ public class ProceduralGameScript : MonoBehaviour
     GameObject player;
 
     [SerializeField]
-    GameObject enemySpawner;
+    GameObject enemySpawnerPrefab;
+    [SerializeField]
+    GameObject wallPrefab;
+    [SerializeField]
+    GameObject worldBlockPrefab;
+
+    [SerializeField]
+    bool isSpawningEnemies = true;
 
     //Time/cron
     float timeSince_SpawnedEnemy = 0f;
-    float timeBetween_SpawnedEnemy = 1f;
+    float timeBetween_SpawnedEnemy = 5f;
+    float timeSince_GenerateEnv = 0f;
+    float timeBetween_GenerateEnv = 1f;
 
 
     // Use this for initialization
@@ -18,8 +27,13 @@ public class ProceduralGameScript : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
 
+        if (enemySpawnerPrefab == null)
+        {
+            isSpawningEnemies = false;
+        }
+
         // Initial spawns
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 400; i++)
         {
             CreateSpawn();
         }
@@ -31,23 +45,37 @@ public class ProceduralGameScript : MonoBehaviour
     {
 
         timeSince_SpawnedEnemy += Time.deltaTime;
+        timeSince_GenerateEnv += Time.deltaTime;
+
         if (IsTimeToSpawnEnemy())
         {
-            Debug.Log("Creating Spawn");
             CreateSpawn();
         }
-
+        if (IsTimeFor(ref timeSince_GenerateEnv, timeBetween_GenerateEnv))
+        {
+            GenerateEnvironment();
+        }
     }
 
     void CreateSpawn()
     {
-        Vector3 spawnpoint = new Vector3(player.transform.position.x + (Random.Range(-20, 20) + 5), player.transform.position.y + (Random.Range(-20, 20) + 5), 0);
-        GameObject spawn = (GameObject)Instantiate(enemySpawner, spawnpoint, transform.rotation);
-        EnemySpawnerScript spawnSettings = enemySpawner.GetComponent<EnemySpawnerScript>();
-        spawnSettings.isOneTimeSpawn = true;
-        spawnSettings.maxNumSpawn = (int)Mathf.Round(Random.Range(3, 10));
-        spawnSettings.spawnRadius = Random.Range(0, 5);
-        spawnSettings.spawnTimer = 0;
+        if (isSpawningEnemies)
+        {
+            Vector3 spawnpoint = new Vector3(player.transform.position.x + (Random.Range(-20, 20) + 5), player.transform.position.y + (Random.Range(-20, 20) + 5), 0);
+            GameObject spawn = (GameObject)Instantiate(enemySpawnerPrefab, spawnpoint, transform.rotation);
+            EnemySpawnerScript spawnSettings = enemySpawnerPrefab.GetComponent<EnemySpawnerScript>();
+            spawnSettings.isOneTimeSpawn = true;
+            spawnSettings.maxNumSpawn = (int)Mathf.Round(Random.Range(3, 10));
+            spawnSettings.spawnRadius = Random.Range(0, 5);
+            spawnSettings.spawnTimer = 0;
+        }
+    }
+
+
+
+    void GenerateEnvironment()
+    {
+
     }
 
     bool IsTimeToSpawnEnemy()
@@ -60,4 +88,16 @@ public class ProceduralGameScript : MonoBehaviour
 
         return false;
     }
+
+    bool IsTimeFor(ref float sinceLast, float interval)
+    {
+        if (sinceLast >= interval)
+        {
+            sinceLast = 0;
+            return true;
+        }
+
+        return false;
+    }
+
 }

@@ -16,7 +16,8 @@ public class Constants {
         PLAYER,
         ENEMY,
         BULLET,
-        WALL
+        WALL,
+        WORLDBLOCK
     }
 	
 }

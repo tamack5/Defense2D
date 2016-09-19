@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\Spawners\EnemySpawnerScript.cs" />
     <Compile Include="Assets\Scripts\Spawners\PlayerSpawner.cs" />
     <Compile Include="Assets\Scripts\StartMenu.cs" />
+    <Compile Include="Assets\Scripts\WorldBlock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

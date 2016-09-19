@@ -59,6 +59,7 @@ public class EnemyScript : MonoBehaviour
             RaycastHit2D cast;
             if (cast = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), direction2D, playerDetectRadius, 1 << 8))
             {
+                //Debug.DrawLine(transform.position, cast.point, Color.red);
                 playerInRange = true;
             }
             else if (cast = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), direction2D, playerDetectRadius*2, 1 << 8))
