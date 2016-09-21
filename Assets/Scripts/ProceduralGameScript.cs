@@ -37,7 +37,6 @@ public class ProceduralGameScript : MonoBehaviour
         {
             CreateSpawn();
         }
-        
     }
 
     // Update is called once per frame
