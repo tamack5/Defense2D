@@ -3,20 +3,27 @@ using System.Collections;
 
 public class WorldBlock : MonoBehaviour {
 
-    public float worldBlockSize;
+    [SerializeField]
+    GameObject enemyPrefab;
+    [SerializeField]
+    int enemyDensity;
+    [SerializeField]
+    float worldBlockSize;
     [SerializeField]
     GameObject wallPrefab;
     [SerializeField]
-    GameObject worldBlockInterior;
+    int wallDensity;
     [SerializeField]
     GameObject worldBockPrefab;
     
 	// Use this for initialization
 	void Start () {
         // The order is important here...
-        GetComponent<BoxCollider2D>().size = new Vector2(worldBlockSize, worldBlockSize);
-        worldBlockInterior.GetComponent<BoxCollider2D>().size = new Vector2(worldBlockSize * 0.7f, worldBlockSize * 0.7f);
-        worldBlockInterior.GetComponent<CircleCollider2D>().radius = worldBlockSize / 2;
+        // Initialize the internal hitboxes to the correct ratios
+        BoxCollider2D[] Boxes = GetComponents<BoxCollider2D>();
+        Boxes[0].size = new Vector2(worldBlockSize, worldBlockSize);
+        Boxes[1].size = new Vector2(worldBlockSize * 0.7f, worldBlockSize * 0.7f);
+        GetComponent<CircleCollider2D>().radius = worldBlockSize / 2;
         
         InitEnvironment();
     }
@@ -26,42 +33,48 @@ public class WorldBlock : MonoBehaviour {
 	
 	}
 
-    void MakeWorldBlock(Vector3 position)
-    {
-        
-        GameObject newWorldBlock = (GameObject)Instantiate(worldBockPrefab, position, Quaternion.AngleAxis(0, Vector3.forward));
-        newWorldBlock.name = "WorldBlock (" + (int)(position.x / worldBlockSize) + "," + (int)(position.y / worldBlockSize) + ")";
-        newWorldBlock.GetComponent<WorldBlock>().worldBockPrefab = worldBockPrefab;
-
-        Debug.Log("Created a worldblock with name: " + newWorldBlock.name);
-    }
-
-    void GenerateSurroundingWorldBlocks(Vector3 startingWorldBlock, int inceptionLevels)
+    // given the center of an existing WorldBlock, generate new Worldblocks in the up/right/down/left positions if they
+    // do not already exist. Iterate this process for each of the created blocks for each inceptionLevel >1.
+    public void GenerateSurroundingWorldBlocks(Vector3 startingWorldBlock, int inceptionLevels = 1)
     {
         inceptionLevels--;
-        Debug.Log(startingWorldBlock);
+        //Debug.Log(startingWorldBlock);
 
         foreach (Vector3 checkDirection in new Vector3[] { Vector3.up, Vector3.right, Vector3.down, Vector3.left })
         {
             RaycastHit2D ray;
             Vector3 worldBlockBorder = (startingWorldBlock + checkDirection * worldBlockSize / 2f) + checkDirection;
+            Vector3 newPosition = startingWorldBlock + checkDirection * worldBlockSize;
 
             if (ray = Physics2D.Raycast(worldBlockBorder, checkDirection, (worldBlockSize * 0.75f), 1 << (int)Constants.LAYERS.WORLDBLOCK))
             {
+                // Don't spawn a block, already exists
                 Debug.DrawLine((startingWorldBlock + checkDirection * worldBlockSize) + checkDirection, ray.point, Color.red, 5f);
-                Debug.Log("hit a worldblock: " + ray.collider.gameObject.transform.position + "with name: " + ray.collider.gameObject.name);
-                // We hit ANOTHER worldblock, so we really don't need to spawn here
             }
             else
             {
-                Vector3 newPosition = startingWorldBlock + checkDirection * worldBlockSize;
                 Debug.DrawLine((startingWorldBlock + checkDirection * worldBlockSize / 2f) + checkDirection, newPosition, Color.red, 5f);
-                Debug.Log("did not hit a worldblock");
+
 
                 MakeWorldBlock(newPosition);
             }
+
+            if (inceptionLevels > 0)
+            {
+                GenerateSurroundingWorldBlocks(newPosition, inceptionLevels);
+            }
         }
+
     }
+
+    public void MakeWorldBlock(Vector3 position)
+    {
+        GameObject newWorldBlock = (GameObject)Instantiate(worldBockPrefab, position, Quaternion.AngleAxis(0, Vector3.forward));
+        newWorldBlock.name = "WorldBlock (" + (int)(position.x / worldBlockSize) + "," + (int)(position.y / worldBlockSize) + ")";
+        newWorldBlock.GetComponent<WorldBlock>().worldBockPrefab = worldBockPrefab;
+    }
+
+    
 
     // Create new WorldBlocks if needed, otherwise just keep walking
     void OnTriggerExit2D(Collider2D other)
@@ -74,11 +87,9 @@ public class WorldBlock : MonoBehaviour {
             RaycastHit2D ray;
             if (ray = Physics2D.Raycast(contact, axisOfContact, (worldBlockSize * 0.75f), 1 << (int)Constants.LAYERS.WORLDBLOCK))
             {
-                // We hit another WorldBlock
-                Debug.DrawLine(ray.collider.gameObject.transform.position, ray.point, Color.red, 5f);
                 Vector3 baseWorldBlock = ray.collider.gameObject.transform.position;
 
-                GenerateSurroundingWorldBlocks(baseWorldBlock, 1);
+                GenerateSurroundingWorldBlocks(baseWorldBlock, 2);
 
             }
             else
@@ -119,13 +130,17 @@ public class WorldBlock : MonoBehaviour {
     // Initialize WorldBlock
     void InitEnvironment()
     {
-        Debug.Log("Calledit from: " + gameObject.name);
-        for (int i = 0; i < 1; i++)
+        SpawnRandomlyInBlock(wallPrefab, wallDensity);
+        SpawnRandomlyInBlock(enemyPrefab, enemyDensity);
+    }
+
+    void SpawnRandomlyInBlock(GameObject prefab, int num)
+    {
+        for (int i = 0; i < num; i++)
         {
-            Debug.Log("Made a wall");
-            Vector2 spawnpoint = new Vector2(transform.position.x + Random.Range(-worldBlockSize/2, worldBlockSize/2), transform.position.y + Random.Range(-worldBlockSize / 2, worldBlockSize / 2));
-            GameObject newWall = (GameObject)Instantiate(wallPrefab, spawnpoint, Quaternion.AngleAxis(Random.Range(0, 356), Vector3.forward));
-            newWall.transform.parent = gameObject.transform;
+            Vector2 spawnpoint = new Vector2(transform.position.x + Random.Range(-worldBlockSize / 2, worldBlockSize / 2), transform.position.y + Random.Range(-worldBlockSize / 2, worldBlockSize / 2));
+            GameObject newObject = (GameObject)Instantiate(prefab, spawnpoint, Quaternion.AngleAxis(Random.Range(0, 356), Vector3.forward));
+            newObject.transform.parent = gameObject.transform;
         }
     }
 

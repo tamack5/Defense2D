@@ -4,17 +4,17 @@ using System.Collections.Generic;
 public class EnemyScript : MonoBehaviour
 {
 
-    public float movementSpeed = 100f;
-    public float baseDamage = 10f;
+    public float movementSpeed;
+    public float baseDamage;
     public GameObject spawnedFrom;
-    public float playerDetectRadius = 0.5f;
+    public float playerDetectRadius;
     bool playerInRange = false;
     GameObject target;
-    GameObject[] targets;
+    List<GameObject> targets;
 
     // Time/cron job variables
     float timeSince_CheckTargets = 0;
-    static float timeBetween_CheckTargets = 0.1f;
+    static float timeBetween_CheckTargets = 0.25f;
     float timeSince_Attack = 0;
     static float timeBetween_Attack = 0.5f;
     bool gotTarget = false;
@@ -23,7 +23,8 @@ public class EnemyScript : MonoBehaviour
     void Start()
     {
         // Get all player objects on creation (HEY! if you make this networked, be sure to update this)
-        targets = GameObject.FindGameObjectsWithTag("Player");
+        GetComponent<CircleCollider2D>().radius = playerDetectRadius;
+        targets = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -43,10 +44,12 @@ public class EnemyScript : MonoBehaviour
         // Reset angular velocity to zero. If we want to be rotating in the future, might want to change this
         gameObject.GetComponent<Rigidbody2D>().angularVelocity = 0f;
 
+        if (playerInRange == false )
+
         // Target Finding
-        if (IsTimeToCheckTargets())
+        if (targets.Count > 0 && IsTimeToCheckTargets())
         {
-            target = FindClosest(targets);
+            target = FindClosest();
         }
 
         // If there is a player
@@ -83,10 +86,10 @@ public class EnemyScript : MonoBehaviour
 
 
     // Return the closest gameobject in the list (by vector magnitude)
-    GameObject FindClosest(GameObject[] targetList)
+    GameObject FindClosest()
     {
         GameObject closest = null;
-        foreach (GameObject target in targetList)
+        foreach (GameObject target in targets)
         {
             if (closest == null || (transform.position.magnitude - target.transform.position.magnitude) < closest.transform.position.magnitude)
             {
@@ -108,6 +111,29 @@ public class EnemyScript : MonoBehaviour
                 Attack();
             }
             
+        }
+    }
+
+    // Something came in range
+    void OnTriggerEnter2D (Collider2D other)
+    {
+        if (other.gameObject.layer == (int)Constants.LAYERS.PLAYER)
+        {
+            targets.Add(other.gameObject);
+        }
+    }
+
+    // Something left range
+    void OnTriggerExit2D (Collider2D other)
+    {
+        if (other.gameObject.layer == (int)Constants.LAYERS.PLAYER)
+        {
+            if (targets.Contains(other.gameObject))
+            {
+                targets.Remove(other.gameObject);
+                target = FindClosest();
+            }
+           
         }
     }
 

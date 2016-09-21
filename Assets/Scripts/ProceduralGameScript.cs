@@ -32,11 +32,9 @@ public class ProceduralGameScript : MonoBehaviour
             isSpawningEnemies = false;
         }
 
-        // Initial spawns
-        for (int i = 0; i < 400; i++)
-        {
-            CreateSpawn();
-        }
+        // Create initial world
+        worldBlockPrefab.GetComponent<WorldBlock>().MakeWorldBlock(transform.position);
+        worldBlockPrefab.GetComponent<WorldBlock>().GenerateSurroundingWorldBlocks(transform.position, 2);
     }
 
     // Update is called once per frame

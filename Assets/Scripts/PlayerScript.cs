@@ -7,6 +7,8 @@ public class PlayerScript : MonoBehaviour {
 
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
+    [SerializeField]
+    float movementSpeed;
     public float score = 0;
 
     [SerializeField]
@@ -32,8 +34,8 @@ public class PlayerScript : MonoBehaviour {
     void FixedUpdate()
     {
         // Player Movement
-        float upDown = Input.GetAxis("Vertical") * Time.deltaTime * 200f;
-        float leftRight = Input.GetAxis("Horizontal") * Time.deltaTime * 200f;
+        float upDown = Input.GetAxis("Vertical") * Time.deltaTime * movementSpeed;
+        float leftRight = Input.GetAxis("Horizontal") * Time.deltaTime * movementSpeed;
 
         gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(leftRight, upDown);
         
