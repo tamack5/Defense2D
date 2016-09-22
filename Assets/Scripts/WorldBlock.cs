@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class WorldBlock : MonoBehaviour {
 
@@ -15,7 +15,7 @@ public class WorldBlock : MonoBehaviour {
     int wallDensity;
     [SerializeField]
     GameObject worldBockPrefab;
-    
+
 	// Use this for initialization
 	void Start () {
         // The order is important here...

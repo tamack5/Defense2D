@@ -6,7 +6,7 @@ public class StartMenu : MonoBehaviour {
 
     public void ClickStartMainGame()
     {
-        SceneManager.LoadScene("MainGame");
+        SceneManager.LoadScene("Waves");
     }
 
     public void ClickStartProceduralGame()

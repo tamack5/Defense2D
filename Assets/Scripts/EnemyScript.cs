@@ -11,6 +11,8 @@ public class EnemyScript : MonoBehaviour
     bool playerInRange = false;
     GameObject target;
     List<GameObject> targets;
+    [SerializeField]
+    LayerMask detectionMask;
 
     // Time/cron job variables
     float timeSince_CheckTargets = 0;
@@ -44,8 +46,6 @@ public class EnemyScript : MonoBehaviour
         // Reset angular velocity to zero. If we want to be rotating in the future, might want to change this
         gameObject.GetComponent<Rigidbody2D>().angularVelocity = 0f;
 
-        if (playerInRange == false )
-
         // Target Finding
         if (targets.Count > 0 && IsTimeToCheckTargets())
         {
@@ -60,12 +60,14 @@ public class EnemyScript : MonoBehaviour
 
             // Player detection radius (on dection, the detection radius increases, so it's more difficult to run)
             RaycastHit2D cast;
-            if (cast = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), direction2D, playerDetectRadius, 1 << 8))
+
+            if (cast = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), direction2D, playerDetectRadius, detectionMask))
             {
-                //Debug.DrawLine(transform.position, cast.point, Color.red);
-                playerInRange = true;
+                Debug.DrawLine(transform.position, cast.point, Color.red);
+                if (cast.collider.gameObject.layer != (int)Constants.LAYERS.WALL)
+                    playerInRange = true;
             }
-            else if (cast = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), direction2D, playerDetectRadius*2, 1 << 8))
+            else if (!(cast = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), direction2D, playerDetectRadius * 2, 1 << 8)))
             {
                 playerInRange = false;
             }
@@ -73,6 +75,7 @@ public class EnemyScript : MonoBehaviour
             // If there is a valid player target in range
             if (playerInRange)
             {
+                Debug.DrawLine(transform.position, target.transform.position, Color.red);
                 // Rotate towards player
                 float lookAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90f;
                 gameObject.GetComponent<Rigidbody2D>().MoveRotation(lookAngle);
