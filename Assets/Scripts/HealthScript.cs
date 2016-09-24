@@ -47,16 +47,16 @@ public class HealthScript : MonoBehaviour {
 
         if (currentHealth <= 0)
         {
-            if (gameObject.tag == "Player")
+            if (gameObject.layer == (int)Constants.LAYERS.PLAYER)
             {
                 // Player death
                 Destroy(gameObject);
             }
-            else if (gameObject.tag == "Enemy")
+            else if (gameObject.layer == (int)Constants.LAYERS.ENEMY)
             {
                 if (dmgSource != null && dmgSource.GetComponent<PlayerScript>() != null)
                 {
-                    dmgSource.GetComponent<PlayerScript>().AddScore(50);
+                    dmgSource.GetComponent<PlayerScript>().AddScore(GetComponent<EnemyScript>().GetWorthInPoints());
                 }
                 gameObject.GetComponent<EnemyScript>().Die();
             }

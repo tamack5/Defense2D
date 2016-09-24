@@ -8,12 +8,15 @@ public class WavesGameScript : MonoBehaviour {
     Text levelTextField;
 
     [SerializeField]
-    GameObject[] enemySpawners;
+    GameObject[] enemy1Spawners;
+    [SerializeField]
+    GameObject[] enemy2Spawners;
 
     [SerializeField]
     float difficulty;
 
-    EnemySpawnerScript[] enemySpawnerScripts;
+    EnemySpawnerScript[] enemySpawner1Scripts;
+    EnemySpawnerScript[] enemySpawner2Scripts;
 
     //time/cron
     float timeSince_LevelUp = 0f;
@@ -25,12 +28,18 @@ public class WavesGameScript : MonoBehaviour {
 	void Start () {
         level = 1;
 
-        enemySpawnerScripts = new EnemySpawnerScript[enemySpawners.Length];
-        for (int i = 0; i < enemySpawners.Length; i++)
+        enemySpawner1Scripts = new EnemySpawnerScript[enemy1Spawners.Length];
+        for (int i = 0; i < enemy1Spawners.Length; i++)
         {
-            enemySpawnerScripts[i] = enemySpawners[i].GetComponent<EnemySpawnerScript>();
+            enemySpawner1Scripts[i] = enemy1Spawners[i].GetComponent<EnemySpawnerScript>();
         }
-	}
+
+        enemySpawner2Scripts = new EnemySpawnerScript[enemy2Spawners.Length];
+        for (int i = 0; i < enemy2Spawners.Length; i++)
+        {
+            enemySpawner2Scripts[i] = enemy2Spawners[i].GetComponent<EnemySpawnerScript>();
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -46,12 +55,21 @@ public class WavesGameScript : MonoBehaviour {
 
     int LevelUp()
     {
-        foreach (EnemySpawnerScript script in enemySpawnerScripts)
+        foreach (EnemySpawnerScript script in enemySpawner1Scripts)
         {
             script.maxNumSpawn++;
         }
 
         level++;
+
+        if (Mathf.RoundToInt(level % 5) == 0)
+        {
+            foreach (EnemySpawnerScript script in enemySpawner2Scripts)
+            {
+                script.maxNumSpawn++;
+            }
+        }
+
         return level;
     }
 

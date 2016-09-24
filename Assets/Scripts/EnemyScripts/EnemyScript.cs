@@ -13,6 +13,8 @@ public class EnemyScript : MonoBehaviour
     List<GameObject> targets;
     [SerializeField]
     LayerMask detectionMask;
+    [SerializeField]
+    float worthInPoints;
 
     // Time/cron job variables
     float timeSince_CheckTargets = 0;
@@ -185,5 +187,10 @@ public class EnemyScript : MonoBehaviour
     public void SetSpawnedFrom(GameObject spawner)
     {
         spawnedFrom = spawner;
+    }
+
+    public float GetWorthInPoints()
+    {
+        return worthInPoints;
     }
 }
