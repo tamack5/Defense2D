@@ -11,12 +11,20 @@ public class HealthScript : MonoBehaviour {
 
 
     bool isFlickering;
+    PlayerScript playerScript;
+    EnemyScript enemyScript;
 
 	// Use this for initialization
 	void Start () {
         currentHealth = startHealth;
         isFlickering = false;
-	}
+
+        if (gameObject.layer == (int)Constants.LAYERS.PLAYER)
+            playerScript = gameObject.GetComponent<PlayerScript>();
+        else if (gameObject.layer == (int)Constants.LAYERS.ENEMY)
+            enemyScript = gameObject.GetComponent<EnemyScript>();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -50,7 +58,7 @@ public class HealthScript : MonoBehaviour {
             if (gameObject.layer == (int)Constants.LAYERS.PLAYER)
             {
                 // Player death
-                Destroy(gameObject);
+                playerScript.Die();
             }
             else if (gameObject.layer == (int)Constants.LAYERS.ENEMY)
             {
@@ -58,7 +66,7 @@ public class HealthScript : MonoBehaviour {
                 {
                     dmgSource.GetComponent<PlayerScript>().AddScore(GetComponent<EnemyScript>().GetWorthInPoints());
                 }
-                gameObject.GetComponent<EnemyScript>().Die();
+                enemyScript.Die();
             }
             else
             {

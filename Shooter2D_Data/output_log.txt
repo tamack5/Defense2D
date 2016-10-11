@@ -14,9 +14,25 @@ Platform assembly: E:\Tyler\Projects\Unity\ZombieDefense2D\Shooter2D_Data\Manage
 Loading E:\Tyler\Projects\Unity\ZombieDefense2D\Shooter2D_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: E:\Tyler\Projects\Unity\ZombieDefense2D\Shooter2D_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading E:\Tyler\Projects\Unity\ZombieDefense2D\Shooter2D_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.102 seconds
+- Completed reload, in  0.037 seconds
 Platform assembly: E:\Tyler\Projects\Unity\ZombieDefense2D\Shooter2D_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: E:\Tyler\Projects\Unity\ZombieDefense2D\Shooter2D_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 3360x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 0.744724 ms
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 14.047051 ms
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 382.
+Total: 0.550785 ms (FindLiveObjects: 0.036925 ms CreateObjectMapping: 0.048717 ms MarkObjects: 0.455523 ms  DeleteObjects: 0.008378 ms)
+
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.588952 ms
+
+Unloading 99 unused Assets to reduce memory usage. Loaded Objects now: 206.
+Total: 0.196731 ms (FindLiveObjects: 0.016445 ms CreateObjectMapping: 0.012412 ms MarkObjects: 0.142428 ms  DeleteObjects: 0.025444 ms)
+
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 283c -> priority: 1 

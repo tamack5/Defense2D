@@ -55,9 +55,12 @@ public class WavesGameScript : MonoBehaviour {
 
     int LevelUp()
     {
-        foreach (EnemySpawnerScript script in enemySpawner1Scripts)
+        if (Mathf.RoundToInt(level % 2) == 0)
         {
-            script.maxNumSpawn++;
+            foreach (EnemySpawnerScript script in enemySpawner1Scripts)
+            {
+                script.maxNumSpawn++;
+            }
         }
 
         level++;

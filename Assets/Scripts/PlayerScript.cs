@@ -111,14 +111,24 @@ public class PlayerScript : MonoBehaviour {
         return false;
     }
 
+    void UpdateScore()
+    {
+        GameManager.GetComponent<GameManager>().UpdateScore(score);
+    }
+
     public void AddScore(float points)
     {
         score += points;
         UpdateScore();
     }
 
-    void UpdateScore()
+    public void Die()
     {
-        GameManager.GetComponent<GameManager>().UpdateScore(score);
+        if (GameManager != null)
+        {
+            GameManager.GetComponent<GameManager>().PlayerDied(score);
+        }
+
+        Destroy(gameObject);
     }
 }

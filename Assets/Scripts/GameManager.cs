@@ -7,6 +7,9 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     Text scoreField;
 
+    [SerializeField]
+    GameOverMenu gameOverScript;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -30,4 +33,9 @@ public class GameManager : MonoBehaviour {
         }
     }
     
+    public void PlayerDied(float score)
+    {
+        gameOverScript.GameOver(score);
+    }
+
 }

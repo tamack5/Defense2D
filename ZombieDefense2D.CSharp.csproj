@@ -68,13 +68,14 @@
     <Compile Include="Assets\Scripts\Constants.cs" />
     <Compile Include="Assets\Scripts\EnemyScripts\EnemyCreatesChildren.cs" />
     <Compile Include="Assets\Scripts\EnemyScripts\EnemyScript.cs" />
+    <Compile Include="Assets\Scripts\GUI\GameOverMenu.cs" />
+    <Compile Include="Assets\Scripts\GUI\StartMenu.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\HealthScript.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Compile Include="Assets\Scripts\ProceduralGameScript.cs" />
     <Compile Include="Assets\Scripts\Spawners\EnemySpawnerScript.cs" />
     <Compile Include="Assets\Scripts\Spawners\PlayerSpawner.cs" />
-    <Compile Include="Assets\Scripts\StartMenu.cs" />
     <Compile Include="Assets\Scripts\WavesGameScript.cs" />
     <Compile Include="Assets\Scripts\WorldBlock.cs" />
   </ItemGroup>

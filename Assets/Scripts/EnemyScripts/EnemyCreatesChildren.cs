@@ -29,9 +29,4 @@ public class EnemyCreatesChildren : MonoBehaviour {
             yield return new WaitForSeconds(spawnPeriod);
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

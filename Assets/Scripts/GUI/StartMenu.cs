@@ -13,4 +13,9 @@ public class StartMenu : MonoBehaviour {
     {
         SceneManager.LoadScene("Procedural");
     }
+
+    public void ClickQuit()
+    {
+        Application.Quit();
+    }
 }
